@@ -1,0 +1,654 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Bimbel Kidzkia Medan — Main</title>
+
+  <!-- Font (online) -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+
+  <style>
+    /* -------------------------
+       THEME: putih / biru / kuning
+       ------------------------- */
+    :root{
+      --page-bg: #ffffff;
+      --surface: #f8fbff;
+      --text: #07203b;
+      --muted: #556b87;
+      --blue: #0b69ff;
+      --yellow: #ffd166;
+      --glass: rgba(11,105,255,0.06);
+      --radius: 12px;
+      --max-w: 1100px;
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%;margin:0;font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,"Helvetica Neue",Arial;color:var(--text);background:linear-gradient(180deg,var(--page-bg), #f2f8ff)}
+    .container{max-width:var(--max-w);margin:0 auto;padding:1rem}
+    a{color:inherit}
+    /* header */
+    .site-header{position:sticky;top:0;z-index:60;background:white;border-bottom:1px solid rgba(11,105,255,0.06);backdrop-filter: blur(6px)}
+    .header-inner{display:flex;align-items:center;justify-content:space-between}
+    .brand{color:var(--blue);font-weight:800;letter-spacing:0.6px;text-decoration:none;font-size:1.05rem}
+    #nav-toggle{display:none;background:transparent;border:0;color:var(--text);font-size:1.2rem}
+    .nav{display:flex;gap:10px;align-items:center}
+    .nav a{color:var(--muted);text-decoration:none;padding:8px 10px;border-radius:8px}
+    .nav a:hover{color:var(--blue);background:rgba(11,105,255,0.06)}
+    /* buttons */
+    .btn{background:linear-gradient(90deg,var(--blue), #2e8bff);border:0;color:white;padding:10px 14px;border-radius:10px;cursor:pointer;font-weight:600}
+    .btn.ghost{background:transparent;border:1px solid rgba(0,0,0,0.04);color:var(--muted)}
+    .btn.small{padding:8px 10px;font-size:0.9rem;border-radius:10px}
+    .btn.outline{background:transparent;border:2px solid var(--blue);color:var(--blue)}
+    .btn-cta{background:linear-gradient(90deg,var(--yellow), #ffca66);color:#07203b;font-weight:700}
+    /* hero */
+    .hero{padding:48px 0}
+    .hero-inner{display:flex;gap:20px;align-items:center}
+    .hero-left{flex:1}
+    .hero-right{width:320px;display:grid;gap:12px}
+    .lead{opacity:0.95}
+    .accent{color:var(--blue);font-weight:800}
+    .card{background:var(--surface);padding:14px;border-radius:var(--radius);color:var(--text);box-shadow:0 6px 20px rgba(11,105,255,0.06)}
+    .stat h3{margin:0;font-size:1.6rem;color:var(--blue)}
+    /* programs */
+    .programs-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:18px}
+    .program-card{background:linear-gradient(180deg, rgba(11,105,255,0.02), rgba(11,105,255,0.01));padding:18px;border-radius:12px}
+    .program-card h3{margin-top:0;color:var(--text)}
+    .program-card ul{margin:8px 0 12px 16px;color:var(--muted)}
+    .section{padding:36px 0}
+    .section-title{color:var(--text);text-align:center;margin-bottom:12px}
+    .muted{color:var(--muted);text-align:center}
+    /* gallery */
+    .gallery-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:10px;margin-top:18px}
+    .gallery-grid img{width:100%;height:120px;object-fit:cover;border-radius:10px;display:block;cursor:pointer;transition:transform .18s ease}
+    .gallery-grid img:hover{transform:translateY(-6px)}
+    .center{text-align:center;margin-top:14px}
+    /* schedule */
+    .schedule-controls{display:flex;gap:10px;align-items:center;margin-bottom:12px;flex-wrap:wrap}
+    .schedule-controls input, .schedule-controls select{padding:8px;border-radius:8px;border:1px solid rgba(2,6,11,0.06)}
+    .schedule-list{display:grid;gap:10px}
+    .event-card{background:var(--surface);padding:12px;border-radius:10px;display:flex;justify-content:space-between;align-items:center}
+    .event-info{color:var(--muted)}
+    .event-info h4{margin:0;color:var(--text)}
+    .event-actions button{margin-left:8px}
+    /* footer */
+    .site-footer{padding:20px 0;color:var(--muted);text-align:center}
+    /* lightbox */
+    .lightbox{position:fixed;inset:0;display:none;align-items:center;justify-content:center;background:rgba(2,6,11,0.6);z-index:80}
+    .lightbox.active{display:flex}
+    .lb-content{max-width:90%;max-height:80%;text-align:center}
+    .lb-content img{max-width:100%;max-height:70vh;border-radius:10px}
+    .lb-close, .lb-prev, .lb-next{position:absolute;background:transparent;border:0;color:white;font-size:2rem;cursor:pointer}
+    .lb-close{top:20px;right:30px}
+    .lb-prev{left:20px}
+    .lb-next{right:20px}
+    .lb-caption{color:var(--muted);margin-top:8px}
+    /* modal */
+    .modal{position:fixed;inset:0;display:none;align-items:center;justify-content:center;background:rgba(2,6,11,0.4);z-index:90}
+    .modal.active{display:flex}
+    .modal-body{background:white;padding:20px;border-radius:12px;width:100%;max-width:420px;color:var(--text);position:relative}
+    .modal-body h3{color:var(--text)}
+    .modal-body label{display:block;margin:8px 0}
+    .modal-body input, .modal-body select{width:100%;padding:8px;border-radius:8px;border:1px solid rgba(0,0,0,0.06);background:transparent;color:inherit}
+    .modal-actions{display:flex;gap:8px;justify-content:flex-end;margin-top:12px}
+    .modal-close{position:absolute;right:12px;top:10px;background:transparent;border:0;color:var(--text);font-size:1.2rem}
+    /* admin */
+    #admin-panel{margin-bottom:14px;padding:12px}
+    .form-row{display:flex;gap:8px;flex-wrap:wrap}
+    .form-row input[type=file]{flex:1}
+    /* responsive */
+    @media (max-width:900px){
+      #nav-toggle{display:block}
+      .nav{position:fixed;right:12px;top:56px;background:white;padding:12px;border-radius:12px;flex-direction:column;display:none;box-shadow:0 8px 30px rgba(2,6,11,0.08)}
+      .nav.show{display:flex}
+      .hero-inner{flex-direction:column}
+      .hero-right{width:100%;grid-template-columns:repeat(3,1fr)}
+      .schedule-controls{flex-direction:column;align-items:stretch}
+    }
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <div class="container header-inner">
+      <a class="brand" href="#home">Bimbel Kidzkia Medan</a>
+      <button id="nav-toggle" aria-label="Buka navigasi">☰</button>
+      <nav id="main-nav" class="nav" role="navigation" aria-label="Main">
+        <a href="#home">Home</a>
+        <a href="#programs">Program</a>
+        <a href="#portfolio">Portfolio</a>
+        <a href="#schedule">Jadwal</a>
+        <a href="#contact">Kontak</a>
+        <button class="btn ghost" id="btn-register">Daftar</button>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <!-- HERO -->
+    <section id="home" class="hero">
+      <div class="container hero-inner">
+        <div class="hero-left">
+          <h1>Bimbel <span class="accent">Kidzkia</span> Medan</h1>
+          <p class="lead">Membentuk generasi juara Olimpiade — materi mendalam, latihan soal intensif, tutor bersertifikat.</p>
+          <div class="hero-ctas">
+            <a class="btn btn-cta" href="#programs">Daftar Sekarang</a>
+            <a class="btn outline" href="#portfolio">Lihat Prestasi</a>
+          </div>
+        </div>
+
+        <div class="hero-right">
+          <div class="card stat">
+            <h3>1.200+</h3>
+            <p>Siswa terlatih</p>
+          </div>
+          <div class="card stat">
+            <h3>350+</h3>
+            <p>Medali & Prestasi</p>
+          </div>
+          <div class="card tutor">
+            <img src="https://picsum.photos/seed/tutor/180/140" alt="Tutor" loading="lazy" style="border-radius:8px;display:block;margin-bottom:8px">
+            <p><strong>Tutor Bersertifikat</strong><br>Spesialis Olimpiade</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- PROGRAMS -->
+    <section id="programs" class="section container">
+      <h2 class="section-title">Program Unggulan</h2>
+      <div class="grid programs-grid">
+        <article class="program-card">
+          <h3>Matematika Olimpiade</h3>
+          <p>Kurasi soal nasional & internasional, sesi problem solving, mentorship intensif.</p>
+          <ul>
+            <li>Latihan mingguan</li>
+            <li>Simulasi lomba</li>
+            <li>Analisis jawaban</li>
+          </ul>
+          <button class="btn small">Daftar Kelas</button>
+        </article>
+
+        <article class="program-card">
+          <h3>Fisika Olimpiade</h3>
+          <p>Workshop eksperimen, problem set lanjutan, dan pembelajaran konsep mendalam.</p>
+          <ul>
+            <li>Lab mini</li>
+            <li>Proyek riset</li>
+            <li>One-on-one coaching</li>
+          </ul>
+          <button class="btn small">Daftar Kelas</button>
+        </article>
+
+        <article class="program-card">
+          <h3>Kimia Olimpiade</h3>
+          <p>Teori + praktik laboratorium dengan fokus pada metodologi kompetisi.</p>
+          <ul>
+            <li>Eksperimen terstruktur</li>
+            <li>Soal kompetisi</li>
+            <li>Pendampingan mentor</li>
+          </ul>
+          <button class="btn small">Daftar Kelas</button>
+        </article>
+
+        <article class="program-card">
+          <h3>Bahasa Inggris Akademik</h3>
+          <p>Persiapan esai, presentasi, debat, dan kemampuan bahasa ilmiah.</p>
+          <ul>
+            <li>Debat & Public Speaking</li>
+            <li>Essay competition</li>
+            <li>Critical reading</li>
+          </ul>
+          <button class="btn small">Daftar Kelas</button>
+        </article>
+      </div>
+    </section>
+
+    <!-- PORTFOLIO -->
+    <section id="portfolio" class="section container">
+      <h2 class="section-title">Galeri Prestasi</h2>
+      <p class="muted">Lihat foto ratusan siswa pemenang, klik foto untuk melihat detail dan cerita singkat.</p>
+
+      <!-- Admin / Upload panel -->
+      <div class="card" id="admin-panel" aria-hidden="false">
+        <h3>Admin: Unggah Foto Siswa</h3>
+        <p class="muted">Isi Cloudinary di konfigurasi JS untuk unggah ke cloud. Jika tidak, gambar akan disimpan di browser (localStorage).</p>
+
+        <form id="upload-form">
+          <div class="form-row" style="margin-bottom:8px">
+            <input type="file" id="file-input" accept="image/*" required>
+            <input type="text" id="caption-input" placeholder="Caption (contoh: Nama - Medali)">
+          </div>
+          <div class="form-row">
+            <button type="submit" class="btn small">Unggah</button>
+            <button type="button" id="btn-clear-local" class="btn outline small">Bersihkan Gallery Lokal</button>
+            <button type="button" id="btn-toggle-admin" class="btn outline small">Sembunyikan Admin</button>
+          </div>
+        </form>
+      </div>
+
+      <div id="gallery" class="gallery-grid" aria-live="polite"></div>
+      <div class="center"><button id="load-more" class="btn">Muat Lebih Banyak</button></div>
+    </section>
+
+    <!-- SCHEDULE -->
+    <section id="schedule" class="section container">
+      <h2 class="section-title">Jadwal Olimpiade Selanjutnya</h2>
+      <div class="schedule-controls">
+        <input type="text" id="search-schedule" placeholder="Cari event atau lokasi...">
+        <select id="filter-subject">
+          <option value="">Semua</option>
+          <option value="Matematika">Matematika</option>
+          <option value="Fisika">Fisika</option>
+          <option value="Kimia">Kimia</option>
+          <option value="Bahasa Inggris">Bahasa Inggris</option>
+        </select>
+        <button id="btn-add-event" class="btn outline small">Tambah Jadwal</button>
+      </div>
+
+      <div id="schedule-list" class="schedule-list" aria-live="polite"></div>
+    </section>
+
+    <!-- CONTACT -->
+    <section id="contact" class="section container">
+      <h2 class="section-title">Kontak & Lokasi</h2>
+      <p>Alamat: Jl. Pendidikan No.88, Medan • Telp: 0812-xxxx-xxxx • Email: info@kidzkia-medan.id</p>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <p>&copy; <span id="year"></span> Bimbel Kidzkia Medan — Semua hak dilindungi.</p>
+    </div>
+  </footer>
+
+  <!-- LIGHTBOX -->
+  <div id="lightbox" class="lightbox" aria-hidden="true">
+    <button class="lb-close" aria-label="Tutup">×</button>
+    <button class="lb-prev" aria-label="Sebelumnya">‹</button>
+    <div class="lb-content">
+      <img src="" alt="" id="lb-img">
+      <p id="lb-caption" class="lb-caption"></p>
+    </div>
+    <button class="lb-next" aria-label="Selanjutnya">›</button>
+  </div>
+
+  <!-- MODAL add event -->
+  <div id="modal" class="modal" aria-hidden="true">
+    <div class="modal-body">
+      <button class="modal-close" aria-label="Tutup">×</button>
+      <h3 id="modal-title">Tambah Jadwal</h3>
+      <form id="event-form">
+        <label>Judul
+          <input type="text" name="title" required>
+        </label>
+        <label>Tanggal
+          <input type="date" name="date" required>
+        </label>
+        <label>Subjek
+          <select name="subject" required>
+            <option>Matematika</option>
+            <option>Fisika</option>
+            <option>Kimia</option>
+            <option>Bahasa Inggris</option>
+          </select>
+        </label>
+        <label>Lokasi
+          <input type="text" name="location" required>
+        </label>
+        <div class="modal-actions">
+          <button type="submit" class="btn">Simpan</button>
+          <button type="button" class="btn outline" id="modal-cancel">Batal</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- SCRIPT: All-in-one -->
+  <script>
+    /*************************************************************************
+     * main.html — Bimbel Kidzkia Medan (single-file)
+     *
+     * IMPORTANT:
+     * If you want to use Cloudinary upload, set CLOUD_NAME and UPLOAD_PRESET
+     * below. Otherwise uploads will be stored locally in the browser only
+     * (localStorage) which is OK for testing, not for hundreds of images.
+     *
+     * To run:
+     * 1. Save this as main.html
+     * 2. Open in browser (double click)
+     *
+     *************************************************************************/
+
+    /* ---------- CONFIG: set these if you have Cloudinary ---------- */
+    const CLOUD_NAME = '';     // <-- your cloud name, e.g. 'mycloud'
+    const UPLOAD_PRESET = '';  // <-- unsigned upload preset name
+
+    /* ---------- Helpers ---------- */
+    const $ = s => document.querySelector(s);
+    const $$ = s => Array.from(document.querySelectorAll(s));
+    document.addEventListener('DOMContentLoaded', () => {
+      $('#year').textContent = new Date().getFullYear();
+
+      // nav toggle
+      $('#nav-toggle')?.addEventListener('click', () => $('#main-nav').classList.toggle('show'));
+
+      // admin toggle
+      $('#btn-toggle-admin')?.addEventListener('click', () => {
+        const panel = $('#admin-panel');
+        const hidden = panel.getAttribute('aria-hidden') === 'true';
+        panel.setAttribute('aria-hidden', String(!hidden));
+        panel.style.display = hidden ? 'block' : 'none';
+      });
+
+      // wire buttons
+      $('#btn-register')?.addEventListener('click', () => Modal.open('register'));
+      $('#btn-add-event')?.addEventListener('click', () => Modal.open('add-event'));
+
+      Gallery.init({total: 300, batch: 30});
+      Schedule.init();
+      AttachUI();
+    });
+
+    /* ---------- Attach UI handlers ---------- */
+    function AttachUI(){
+      // upload
+      const uploadForm = $('#upload-form');
+      if(uploadForm){
+        uploadForm.addEventListener('submit', async (e) => {
+          e.preventDefault();
+          const fileInput = $('#file-input');
+          const captionInput = $('#caption-input');
+          const file = fileInput.files[0];
+          const caption = (captionInput.value || 'Prestasi Siswa').trim();
+          if(!file) return alert('Pilih gambar terlebih dahulu.');
+
+          if(CLOUD_NAME && UPLOAD_PRESET){
+            // upload to Cloudinary unsigned
+            try {
+              const url = `https://api.cloudinary.com/v1_1/${CLOUD_NAME}/upload`;
+              const form = new FormData();
+              form.append('file', file);
+              form.append('upload_preset', UPLOAD_PRESET);
+              const res = await fetch(url, {method:'POST', body: form});
+              const data = await res.json();
+              if(data.secure_url){
+                const item = {src: data.secure_url, thumb: data.secure_url, caption};
+                Gallery.prependAndStore(item);
+                alert('Unggah berhasil ke Cloudinary.');
+                uploadForm.reset();
+              } else {
+                console.error(data);
+                alert('Gagal mengunggah ke Cloudinary.');
+              }
+            } catch(err){
+              console.error(err);
+              alert('Terjadi kesalahan saat mengunggah ke Cloudinary.');
+            }
+          } else {
+            // fallback: save as dataURL (local only)
+            const reader = new FileReader();
+            reader.onload = function(evt){
+              const dataUrl = evt.target.result;
+              const item = {src: dataUrl, thumb: dataUrl, caption};
+              Gallery.prependAndStore(item);
+              alert('Gambar disimpan di browser (local). Untuk ratusan foto gunakan Cloudinary.');
+              uploadForm.reset();
+            };
+            reader.readAsDataURL(file);
+          }
+        });
+      }
+
+      // clear local gallery
+      $('#btn-clear-local')?.addEventListener('click', () => {
+        if(confirm('Hapus semua gambar yang disimpan di browser?')){
+          localStorage.removeItem('kidzkia_gallery');
+          location.reload();
+        }
+      });
+    }
+
+    /* ---------- Gallery Module ---------- */
+    const Gallery = (() => {
+      const container = $('#gallery');
+      const loadMoreBtn = $('#load-more');
+      let total = 0, batch = 30, loaded = 0;
+      let items = [];
+
+      function loadStored(){
+        try {
+          const raw = localStorage.getItem('kidzkia_gallery');
+          if(raw) return JSON.parse(raw);
+        } catch(e){ console.warn('gStore parse error', e); }
+        return [];
+      }
+      function saveStored(list){
+        localStorage.setItem('kidzkia_gallery', JSON.stringify(list));
+      }
+
+      function makePlaceholder(i){
+        return {
+          id: 'ph-' + i,
+          src: `https://picsum.photos/seed/kidzkia-${i}/1200/900`,
+          thumb: `https://picsum.photos/seed/kidzkia-${i}/400/300`,
+          caption: `Siswa Pemenang #${i}`
+        };
+      }
+
+      function init({total: t = 100, batch: b = 24} = {}){
+        total = t; batch = b; loaded = 0; items = [];
+        const stored = loadStored();
+        if(stored.length) items = items.concat(stored);
+        for(let i=1;i<=t;i++) items.push(makePlaceholder(i));
+        total = items.length;
+        renderBatch();
+        if(loadMoreBtn) loadMoreBtn.addEventListener('click', renderBatch);
+      }
+
+      function renderBatch(){
+        const fragment = document.createDocumentFragment();
+        const end = Math.min(loaded + batch, total);
+        for(let i = loaded; i < end; i++){
+          const it = items[i];
+          const img = document.createElement('img');
+          img.dataset.index = i;
+          img.dataset.src = it.thumb || it.src;
+          img.alt = it.caption || 'Prestasi Siswa';
+          img.className = 'lazy';
+          img.tabIndex = 0;
+          img.addEventListener('click', () => Lightbox.open(i));
+          img.addEventListener('keydown', e => { if(e.key === 'Enter') Lightbox.open(i); });
+          fragment.appendChild(img);
+        }
+        container.appendChild(fragment);
+        loaded = end;
+        if(loaded >= total && loadMoreBtn) loadMoreBtn.style.display = 'none';
+        LazyLoad.observeAll();
+      }
+
+      function loadMore(){ renderBatch(); }
+
+      function prepend(item){
+        items.unshift(item);
+        total = items.length;
+        // render one at top
+        const img = document.createElement('img');
+        img.dataset.index = 0;
+        img.dataset.src = item.thumb || item.src;
+        img.alt = item.caption || 'Prestasi Siswa';
+        img.className = 'lazy';
+        img.tabIndex = 0;
+        img.addEventListener('click', () => Lightbox.open(0));
+        container.insertBefore(img, container.firstChild);
+        LazyLoad.observeAll();
+      }
+
+      function prependAndStore(item){
+        prepend(item);
+        const stored = loadStored();
+        stored.unshift(item);
+        saveStored(stored);
+      }
+
+      function getItem(index){
+        if(items[index]) return items[index];
+        return {src: `https://picsum.photos/seed/kidzkia-${index+1}/1200/900`, caption:`Siswa Pemenang #${index+1}`};
+      }
+
+      return {init, loadMore, prepend, prependAndStore, getItem};
+    })();
+
+    /* ---------- LazyLoad ---------- */
+    const LazyLoad = (() => {
+      const obs = new IntersectionObserver(entries => {
+        for(const e of entries){
+          if(e.isIntersecting){
+            const img = e.target;
+            img.src = img.dataset.src;
+            img.classList.remove('lazy');
+            obs.unobserve(img);
+          }
+        }
+      },{rootMargin:'200px'});
+      function observeAll(){ $$('.lazy').forEach(img => { if(!img.src) obs.observe(img); else img.classList.remove('lazy'); }); }
+      return {observeAll};
+    })();
+
+    /* ---------- Lightbox ---------- */
+    const Lightbox = (() => {
+      const lb = $('#lightbox');
+      const imgEl = $('#lb-img');
+      const captionEl = $('#lb-caption');
+      let currentIndex = 0;
+      function open(index){
+        currentIndex = index;
+        const it = Gallery.getItem(index);
+        imgEl.src = it.src;
+        imgEl.alt = it.caption || '';
+        captionEl.textContent = it.caption || '';
+        lb.classList.add('active');
+        lb.setAttribute('aria-hidden','false');
+      }
+      function close(){ lb.classList.remove('active'); lb.setAttribute('aria-hidden','true'); imgEl.src = ''; }
+      function prev(){ open(Math.max(0, currentIndex-1)); }
+      function next(){ open(currentIndex+1); }
+      lb.querySelector('.lb-close').addEventListener('click', close);
+      lb.querySelector('.lb-prev').addEventListener('click', prev);
+      lb.querySelector('.lb-next').addEventListener('click', next);
+      document.addEventListener('keydown', e => {
+        if(!lb.classList.contains('active')) return;
+        if(e.key === 'Escape') close();
+        if(e.key === 'ArrowLeft') prev();
+        if(e.key === 'ArrowRight') next();
+      });
+      return {open, close};
+    })();
+
+    /* ---------- Modal ---------- */
+    const Modal = (() => {
+      const modal = $('#modal');
+      const form = $('#event-form');
+      function open(mode){
+        modal.classList.add('active');
+        modal.setAttribute('aria-hidden','false');
+        if(mode === 'register') $('#modal-title').textContent = 'Form Pendaftaran';
+        else $('#modal-title').textContent = 'Tambah Jadwal';
+        form.reset();
+      }
+      function close(){ modal.classList.remove('active'); modal.setAttribute('aria-hidden','true'); }
+      modal.querySelector('.modal-close').addEventListener('click', close);
+      $('#modal-cancel').addEventListener('click', close);
+      form.addEventListener('submit', e => {
+        e.preventDefault();
+        const data = Object.fromEntries(new FormData(form).entries());
+        Schedule.add({ title: data.title, date: data.date, subject: data.subject, location: data.location });
+        close();
+      });
+      return {open, close};
+    })();
+
+    /* ---------- Schedule Module ---------- */
+    const Schedule = (() => {
+      const storageKey = 'kidzkia_schedule_v1';
+      let events = [];
+      const listEl = $('#schedule-list');
+      const searchInput = $('#search-schedule');
+      const filterSelect = $('#filter-subject');
+
+      function load(){
+        const raw = localStorage.getItem(storageKey);
+        if(raw) events = JSON.parse(raw);
+        else {
+          events = [
+            {id:1,title:'Olimpiade Matematika Nasional',date:'2025-09-20',subject:'Matematika',location:'Jakarta'},
+            {id:2,title:'Olimpiade Sains Kota Medan',date:'2025-10-05',subject:'Fisika',location:'Medan'},
+            {id:3,title:'Lomba Kimia Antar-School',date:'2025-11-15',subject:'Kimia',location:'Surabaya'},
+          ];
+          save();
+        }
+      }
+      function save(){ localStorage.setItem(storageKey, JSON.stringify(events)); }
+
+      function render(){
+        const q = (searchInput.value || '').toLowerCase().trim();
+        const subj = filterSelect.value;
+        listEl.innerHTML = '';
+        const filtered = events.filter(ev => {
+          if(subj && ev.subject !== subj) return false;
+          if(q && !(ev.title.toLowerCase().includes(q) || ev.location.toLowerCase().includes(q) || ev.subject.toLowerCase().includes(q))) return false;
+          return true;
+        }).sort((a,b)=> new Date(a.date)-new Date(b.date));
+        if(filtered.length === 0){ listEl.innerHTML = '<p class="muted">Tidak ada jadwal ditemukan.</p>'; return; }
+        for(const ev of filtered){
+          const div = document.createElement('div');
+          div.className = 'event-card';
+          div.innerHTML = `
+            <div class="event-info">
+              <h4>${ev.title}</h4>
+              <div class="muted">${ev.date} • ${ev.subject} • ${ev.location}</div>
+            </div>
+            <div class="event-actions">
+              <button class="btn small" data-id="${ev.id}">Simpan .ics</button>
+              <button class="btn outline small" data-del="${ev.id}">Hapus</button>
+            </div>`;
+          listEl.appendChild(div);
+        }
+      }
+
+      function add(ev){ ev.id = Date.now(); events.push(ev); save(); render(); }
+      function remove(id){ events = events.filter(e=>e.id!==id); save(); render(); }
+
+      function exportICS(ev){
+        const start = new Date(ev.date);
+        const dtstamp = new Date().toISOString().replace(/[-:]/g,'').split('.')[0] + 'Z';
+        const dtstart = start.toISOString().replace(/[-:]/g,'').split('T')[0].replace(/-/g,'') + 'T080000Z';
+        const content = `BEGIN:VCALENDAR\\nVERSION:2.0\\nPRODID:-//Kidzkia//EN\\nBEGIN:VEVENT\\nUID:${ev.id}@kidzkia\\nDTSTAMP:${dtstamp}\\nDTSTART:${dtstart}\\nSUMMARY:${ev.title}\\nLOCATION:${ev.location}\\nEND:VEVENT\\nEND:VCALENDAR`;
+        const blob = new Blob([content], {type:'text/calendar'});
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url; a.download = `${ev.title.replace(/\\s+/g,'_')}.ics`; a.click(); URL.revokeObjectURL(url);
+      }
+
+      function attachHandlers(){
+        listEl.addEventListener('click', e => {
+          const btn = e.target.closest('button'); if(!btn) return;
+          if(btn.dataset.id){
+            const id = Number(btn.dataset.id);
+            const ev = events.find(x=>x.id===id);
+            if(ev) exportICS(ev);
+          }
+          if(btn.dataset.del){
+            const id = Number(btn.dataset.del);
+            if(confirm('Hapus jadwal ini?')) remove(id);
+          }
+        });
+        searchInput.addEventListener('input', render);
+        filterSelect.addEventListener('change', render);
+      }
+
+      function init(){ load(); attachHandlers(); render(); }
+      return {init, add};
+    })();
+  </script>
+</body>
+</html>
